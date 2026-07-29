@@ -1,0 +1,39 @@
+# Plan: Reverting to PostgreSQL
+
+This document outlines the steps required to transition the **Swapea** application back to a PostgreSQL database from the current SQLite configuration.
+
+## 1. Environment Configuration
+- **Update `.env`**: Replace the `DATABASE_URL` with a valid PostgreSQL connection string.
+  ```env
+  DATABASE_URL="postgresql://user:password@localhost:5432/swapea?schema=public"
+  ```
+- **Update `schema.prisma`**:
+  - Change `datasource` provider to `"postgresql"`.
+  - Revert `images` and `tags` fields in the `Listing` model from `String` to `String[]`.
+  - Restore `enum` types for `Role`, `ListingCondition`, `OfferStatus`, etc., as PostgreSQL supports them natively.
+
+## 2. Codebase Reversion
+### API Routes & Logic
+- **Remove JSON Parsing**: Remove `JSON.parse()` calls when reading `images` and `tags` from the database.
+- **Remove Serialization**: Remove `JSON.stringify()` calls when creating or updating listings in API routes (e.g., `src/app/api/listings/route.ts`).
+- **Update Enums**: Replace raw string values with actual Prisma enum exports in logic checks.
+
+### Components
+- **DESERIALIZATION**: Remove the `parsedListing` workaround in `src/app/listings/[id]/page.tsx` and `src/app/page.tsx` as Prisma will return arrays directly.
+- **Imports**: Revert imports in `src/components/listing-form.tsx` and others from `@/lib/enums` back to `@prisma/client`.
+
+### Seeding
+- **Update `prisma/seed.ts`**: Restore array literal syntax for the `images` and `tags` fields and use the actual `Role` and `ListingCondition` enums.
+
+## 3. Database Migration
+- **Clear SQLite Cache**: Delete `prisma/dev.db`.
+- **Reset Migrations**: If necessary, clear the `prisma/migrations` folder to start fresh with a clean PostgreSQL schema.
+- **Run Migrations**: 
+  ```bash
+  npx prisma migrate dev --name init_postgresql
+  npx tsx prisma/seed.ts
+  ```
+
+## 4. Maintenance
+- **Update Dependencies**: Re-evaluate if you want to upgrade back to the latest Prisma version (`7.x`).
+- **Remove Enums Helper**: Delete `src/lib/enums.ts` once all references are moved back to `@prisma/client`.

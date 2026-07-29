@@ -1,0 +1,38 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.*
+
+# Next.js & Capacitor build outputs
+/.next/
+/out/
+/build
+
+# Database local sqlite
+/prisma/dev.db
+/prisma/dev.db-journal
+
+# Environment variables (commit .env.example instead)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs & Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# System & OS
+.DS_Store
+*.pem
+Thumbs.db
+
+# Vercel & IDE
+.vercel
+.vscode
+.idea
+*.tsbuildinfo
+next-env.d.ts

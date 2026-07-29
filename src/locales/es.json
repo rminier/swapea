@@ -1,0 +1,86 @@
+{
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "logout": "Cerrar sesión"
+  },
+  "navbar": {
+    "search_placeholder": "Buscar anuncios...",
+    "new_listing": "Nuevo Anuncio",
+    "login": "Iniciar sesión",
+    "signup": "Registrarse",
+    "profile": "Perfil",
+    "dashboard": "Tablero",
+    "settings": "Configuración",
+    "theme": "Alternar tema"
+  },
+  "hero": {
+    "title_part1": "Intercambia lo que ",
+    "title_not_need": "no necesitas",
+    "title_part2": " por lo que ",
+    "title_do": "sí",
+    "subtitle": "Únete al mercado sin efectivo. Intercambia tus artículos directamente con otros basados en el valor mutuo.",
+    "start_button": "Comienza a Intercambiar",
+    "explore_button": "Explorar Anuncios"
+  },
+  "home": {
+    "fresh_market": "Novedades en el mercado",
+    "view_all": "Ver todo",
+    "no_listings": "No se encontraron anuncios.",
+    "be_first_list": "Sé el primero en publicar"
+  },
+  "settings": {
+    "title": "Configuración de la Cuenta",
+    "subtitle": "Administra tu configuración y detalles de suscripción.",
+    "profile_info": "Información del Perfil",
+    "profile_desc": "Administra los detalles de tu perfil público.",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "membership": "Membresía Actual",
+    "renewal_date": "Fecha de Renovación del Plan",
+    "edit_profile": "Editar Perfil",
+    "subscription_plans": "Planes de Suscripción",
+    "subscription_desc": "Selecciona un nivel de membresía para escalar tus actividades de intercambio en Swapea.",
+    "active_plan": "Plan Activo",
+    "current_plan_button": "Tu Plan Actual",
+    "processing": "Procesando...",
+    "subscribe_to": "Suscribirse a {name}",
+    "language_title": "Preferencias de Idioma",
+    "language_desc": "Elige tu idioma preferido para la interfaz.",
+    "language_select_label": "Seleccionar Idioma",
+    "english": "Inglés",
+    "spanish": "Español",
+    "tiers": {
+      "free": {
+        "name": "Gratuito",
+        "desc": "Sin costo mensual. Perfecto para probar Swapea.",
+        "f1": "Hasta 5 anuncios creados/mes",
+        "f2": "Hasta 5 ofertas de intercambio enviadas/mes",
+        "f3": "Categorías básicas (Moda, Coleccionables, Otros)"
+      },
+      "basic": {
+        "name": "Básico",
+        "desc": "Obtén anuncios y ofertas ilimitadas por solo $1.",
+        "f1": "Anuncios creados ilimitados",
+        "f2": "Ofertas de intercambio ilimitadas",
+        "f3": "Categorías básicas (Moda, Coleccionables, Otros)"
+      },
+      "premium": {
+        "name": "Premium",
+        "desc": "Desbloquea todas las categorías y funciones profesionales.",
+        "f1": "Anuncios y ofertas de intercambio ilimitadas",
+        "f2": "Todas las categorías (Electrónica, Juegos, Instrumentos)",
+        "f3": "Métricas de reputación de vendedor verificado"
+      },
+      "vip": {
+        "name": "VIP",
+        "desc": "Beneficios premium más aumentos de anuncios ilimitados.",
+        "f1": "Anuncios y ofertas de intercambio ilimitadas",
+        "f2": "Todas las categorías desbloqueadas",
+        "f3": "Aumentos de anuncios ilimitados (Anuncios promocionados)",
+        "f4": "Soporte VIP y placa de perfil exclusiva"
+      }
+    }
+  }
+}

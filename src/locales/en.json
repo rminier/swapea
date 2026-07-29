@@ -1,0 +1,86 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "logout": "Log out"
+  },
+  "navbar": {
+    "search_placeholder": "Search listings...",
+    "new_listing": "New Listing",
+    "login": "Log in",
+    "signup": "Sign up",
+    "profile": "Profile",
+    "dashboard": "Dashboard",
+    "settings": "Settings",
+    "theme": "Toggle theme"
+  },
+  "hero": {
+    "title_part1": "Trade the things you ",
+    "title_not_need": "don't need",
+    "title_part2": " for things you ",
+    "title_do": "do",
+    "subtitle": "Join the cashless marketplace. Swap your items directly with others based on mutual value.",
+    "start_button": "Start Trading Now",
+    "explore_button": "Explore Listings"
+  },
+  "home": {
+    "fresh_market": "Fresh to the market",
+    "view_all": "View all",
+    "no_listings": "No listings found.",
+    "be_first_list": "Be the first to list"
+  },
+  "settings": {
+    "title": "Account Settings",
+    "subtitle": "Manage your settings and subscription details.",
+    "profile_info": "Profile Information",
+    "profile_desc": "Manage your public profile details.",
+    "name": "Name",
+    "email": "Email",
+    "membership": "Current Membership",
+    "renewal_date": "Plan Renewal Date",
+    "edit_profile": "Edit Profile",
+    "subscription_plans": "Subscription Plans",
+    "subscription_desc": "Select a membership level to scale up your trading activities on Swapea.",
+    "active_plan": "Active Plan",
+    "current_plan_button": "Your Current Plan",
+    "processing": "Processing...",
+    "subscribe_to": "Subscribe to {name}",
+    "language_title": "Language Preferences",
+    "language_desc": "Choose your preferred language for the interface.",
+    "language_select_label": "Select Language",
+    "english": "English",
+    "spanish": "Spanish",
+    "tiers": {
+      "free": {
+        "name": "Free",
+        "desc": "No monthly cost. Perfect to try Swapea.",
+        "f1": "Up to 5 listings created/month",
+        "f2": "Up to 5 trade offers sent/month",
+        "f3": "Basic categories (Fashion, Collectibles, Other)"
+      },
+      "basic": {
+        "name": "Basic",
+        "desc": "Get unlimited listings and offers for just $1.",
+        "f1": "Unlimited created listings",
+        "f2": "Unlimited trade offers",
+        "f3": "Basic categories (Fashion, Collectibles, Other)"
+      },
+      "premium": {
+        "name": "Premium",
+        "desc": "Unlock all categories and professional features.",
+        "f1": "Unlimited listings & trade offers",
+        "f2": "All categories (Electronics, Gaming, Instruments)",
+        "f3": "Verified seller reputation metrics"
+      },
+      "vip": {
+        "name": "VIP",
+        "desc": "Premium benefits plus unlimited listing boosts.",
+        "f1": "Unlimited listings & trade offers",
+        "f2": "All categories unlocked",
+        "f3": "Unlimited listing boosts (Promoted Listings)",
+        "f4": "VIP support & exclusive profile badge"
+      }
+    }
+  }
+}

@@ -1,0 +1,180 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --color-brand-lime: var(--brand-lime);
+  --color-brand-cyan: var(--brand-cyan);
+  --color-brand-blue: var(--brand-blue);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  /* Brand Palette from Swapii Logo (Lime -> Cyan -> Blue) */
+  --brand-lime: oklch(0.76 0.22 145);
+  --brand-cyan: oklch(0.68 0.18 200);
+  --brand-blue: oklch(0.55 0.22 250);
+
+  /* Light Mode Design System */
+  --background: oklch(0.99 0.005 200);
+  --foreground: oklch(0.15 0.03 240);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.03 240);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.15 0.03 240);
+  
+  --primary: oklch(0.52 0.22 245);       /* Deep Vivid Royal Blue Primary */
+  --primary-foreground: oklch(0.99 0 0);
+  
+  --secondary: oklch(0.96 0.01 200);
+  --secondary-foreground: oklch(0.15 0.03 240);
+  
+  --muted: oklch(0.96 0.01 200);
+  --muted-foreground: oklch(0.48 0.03 240);
+  
+  --accent: oklch(0.68 0.20 155);        /* Electric Lime Emerald Accent */
+  --accent-foreground: oklch(0.10 0 0);
+  
+  --destructive: oklch(0.60 0.22 25);
+  --destructive-foreground: oklch(0.99 0 0);
+  
+  --border: oklch(0.92 0.01 200);
+  --input: oklch(0.92 0.01 200);
+  --ring: oklch(0.52 0.22 245);
+  --radius: 0.85rem;
+  
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.52 0.22 245);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.52 0.22 245);
+}
+
+.dark {
+  /* Dark Mode Design System */
+  --background: oklch(0.12 0.02 240);   /* Deep Ambient Slate-Blue Dark Background */
+  --foreground: oklch(0.96 0.01 200);
+  --card: oklch(0.15 0.02 240 / 75%);   /* Glassmorphic Card Base */
+  --card-foreground: oklch(0.96 0.01 200);
+  --popover: oklch(0.15 0.02 240);
+  --popover-foreground: oklch(0.96 0.01 200);
+  
+  --primary: oklch(0.65 0.20 215);       /* Vibrant Cyan-Blue Primary */
+  --primary-foreground: oklch(0.99 0 0);
+  
+  --secondary: oklch(0.18 0.02 240);
+  --secondary-foreground: oklch(0.96 0.01 200);
+  
+  --muted: oklch(0.18 0.02 240);
+  --muted-foreground: oklch(0.65 0.02 200);
+  
+  --accent: oklch(0.76 0.22 145);        /* Neon Lime Green Accent */
+  --accent-foreground: oklch(0.10 0 0);
+  
+  --destructive: oklch(0.50 0.20 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  
+  --border: oklch(1 0 0 / 12%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.65 0.20 215);
+  
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.65 0.20 215);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.65 0.20 215);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+  html {
+    @apply font-sans;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight;
+  }
+  button, input, textarea, select, a {
+    @apply transition-all duration-200;
+  }
+}
+
+@layer utilities {
+  .glassmorphic {
+    @apply bg-card/45 backdrop-blur-md border border-border/40;
+  }
+  .glassmorphic-glow {
+    @apply shadow-xl shadow-cyan-500/10 ring-1 ring-cyan-500/20;
+  }
+  .bg-brand-gradient {
+    @apply bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-600;
+  }
+  .text-brand-gradient {
+    @apply bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-600 bg-clip-text text-transparent;
+  }
+  .text-brand-gradient-reverse {
+    @apply bg-gradient-to-r from-blue-600 via-cyan-400 to-emerald-400 bg-clip-text text-transparent;
+  }
+  .bg-brand-button {
+    @apply bg-gradient-to-r from-emerald-400 via-cyan-500 to-blue-600 hover:from-emerald-500 hover:via-cyan-600 hover:to-blue-700 text-white font-bold shadow-lg shadow-cyan-500/20 border-0 transition-all duration-300 transform hover:scale-[1.02];
+  }
+  .hover-scale {
+    @apply transition-transform duration-300 hover:scale-[1.02];
+  }
+  .active-click {
+    @apply transition-transform active:translate-y-[1px];
+  }
+}

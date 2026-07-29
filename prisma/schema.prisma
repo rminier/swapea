@@ -1,0 +1,224 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Enums removed for SQLite compatibility
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  username      String?   @unique
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  hashedPassword String?
+  role          String    @default("USER")
+  reputation    Float     @default(0)
+  bio           String?
+  location      String?
+  website       String?
+  twitter       String?
+  instagram     String?
+  linkedin      String?
+  privacySettings String  @default("{\"showEmail\":false,\"showLocation\":true,\"showTrades\":true}")
+  suspendedAt   DateTime?
+  boostedUntil  DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  listings      Listing[]
+  offersMade    Offer[]   @relation("UserOffers")
+  messages      Message[]
+  givenRatings  Rating[]  @relation("RatingGiver")
+  receivedRatings Rating[] @relation("RatingReceiver")
+  notifications Notification[]
+  reportsMade   Report[]  @relation("ReportCreator")
+  reportsReceived Report[] @relation("ReportedUser")
+  subscription  Subscription?
+  
+  followers     Follow[] @relation("Following")
+  following     Follow[] @relation("Follower")
+}
+
+model Follow {
+  id          String   @id @default(cuid())
+  followerId  String
+  followingId String
+  createdAt   DateTime @default(now())
+
+  follower    User @relation("Follower", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User @relation("Following", fields: [followingId], references: [id], onDelete: Cascade)
+
+  @@unique([followerId, followingId])
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Listing {
+  id          String   @id @default(cuid())
+  userId      String
+  title       String
+  description String
+  images      String // Stored as stringified JSON array
+  category    String
+  condition   String
+  tags        String // Stored as stringified JSON array
+  location    String
+  latitude    Float?
+  longitude   Float?
+  visibility  Boolean  @default(true)
+  softDeleted Boolean  @default(false)
+  autoBumpUntil DateTime?
+  lastBumpedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  targetOffers Offer[] @relation("TargetListing")
+  offeredIn    Offer[] @relation("OfferedListings")
+  reports      Report[] @relation("ReportedListing")
+  promoted     PromotedListing?
+
+  @@index([title, description, tags, category])
+}
+
+model Offer {
+  id              String   @id @default(cuid())
+  proposingUserId String
+  targetListingId String
+  status          String @default("PENDING")
+  priority        Boolean @default(false)
+  protected       Boolean @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  proposingUser   User     @relation("UserOffers", fields: [proposingUserId], references: [id], onDelete: Cascade)
+  targetListing   Listing  @relation("TargetListing", fields: [targetListingId], references: [id], onDelete: Cascade)
+  offeredListings Listing[] @relation("OfferedListings")
+  
+  trade           Trade?
+}
+
+model Trade {
+  id        String   @id @default(cuid())
+  offerId   String   @unique
+  status    String @default("PENDING")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  offer     Offer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  messages  Message[]
+}
+
+model Message {
+  id        String   @id @default(cuid())
+  tradeId   String
+  senderId  String
+  content   String
+  createdAt DateTime @default(now())
+
+  trade     Trade    @relation(fields: [tradeId], references: [id], onDelete: Cascade)
+  sender    User     @relation(fields: [senderId], references: [id], onDelete: Cascade)
+}
+
+model Rating {
+  id          String   @id @default(cuid())
+  giverId     String
+  receiverId  String
+  score       Int      // 1 to 5
+  comment     String?
+  createdAt   DateTime @default(now())
+
+  giver       User     @relation("RatingGiver", fields: [giverId], references: [id], onDelete: Cascade)
+  receiver    User     @relation("RatingReceiver", fields: [receiverId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  content   String
+  read      Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Report {
+  id                String   @id @default(cuid())
+  creatorId         String
+  reportedUserId    String?
+  reportedListingId String?
+  reason            String
+  status            String @default("PENDING")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  creator           User     @relation("ReportCreator", fields: [creatorId], references: [id], onDelete: Cascade)
+  reportedUser      User?    @relation("ReportedUser", fields: [reportedUserId], references: [id], onDelete: Cascade)
+  reportedListing   Listing? @relation("ReportedListing", fields: [reportedListingId], references: [id], onDelete: Cascade)
+}
+
+model Subscription {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  plan      String   @default("FREE") // e.g. FREE, PRO
+  active    Boolean  @default(true)
+  expiresAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PromotedListing {
+  id        String   @id @default(cuid())
+  listingId String   @unique
+  active    Boolean  @default(true)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+}
