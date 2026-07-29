@@ -91,16 +91,9 @@ export function ListingCardEnhanced({ listing, hideUser = false }: ListingCardPr
               {listing.title}
             </h3>
 
-            <div className="flex items-center justify-between text-[11px] sm:text-xs text-muted-foreground font-medium pt-1">
-              <div className="flex items-center gap-1 min-w-0">
-                <MapPin className="h-3 w-3 shrink-0 text-muted-foreground/70" />
-                <span className="truncate max-w-[80px] sm:max-w-[120px]">{listing.location}</span>
-              </div>
-              <div className="flex items-center gap-1 shrink-0 ml-1">
-                <Clock className="h-3 w-3 shrink-0 text-muted-foreground/70" />
-                <span>{formatTimeShort(listing.createdAt)}</span>
-              </div>
-            </div>
+            <p className="text-[11px] sm:text-xs text-muted-foreground font-medium line-clamp-2 leading-relaxed pt-0.5">
+              {listing.description}
+            </p>
           </CardContent>
         </div>
 
