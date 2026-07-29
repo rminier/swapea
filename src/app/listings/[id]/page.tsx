@@ -7,8 +7,39 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { OfferModal } from "@/components/offer-modal";
 import { Button } from "@/components/ui/button";
 
+import type { Metadata } from "next";
+
 interface ListingPageProps {
   params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata({ params }: ListingPageProps): Promise<Metadata> {
+  const { id } = await params;
+  const listing = await prisma.listing.findUnique({
+    where: { id },
+    select: { title: true, description: true, images: true, category: true }
+  });
+
+  if (!listing) return { title: "Listing Not Found - Swapea" };
+
+  const images = (typeof listing.images === "string" ? JSON.parse(listing.images) : listing.images) as string[];
+  const firstImage = Array.isArray(images) && images.length > 0 ? images[0] : undefined;
+
+  return {
+    title: `${listing.title} | Swapea Marketplace`,
+    description: listing.description.slice(0, 160),
+    openGraph: {
+      title: listing.title,
+      description: listing.description,
+      images: firstImage ? [{ url: firstImage }] : [],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: listing.title,
+      description: listing.description,
+      images: firstImage ? [firstImage] : [],
+    },
+  };
 }
 
 export default async function ListingPage({ params }: ListingPageProps) {
@@ -39,8 +70,28 @@ export default async function ListingPage({ params }: ListingPageProps) {
     POOR: "bg-red-500/10 text-red-500",
   };
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: parsedListing.title,
+    image: parsedListing.images,
+    description: parsedListing.description,
+    category: parsedListing.category,
+    offers: {
+      "@type": "Offer",
+      availability: "https://schema.org/InStock",
+      priceCurrency: "USD",
+      price: "0.00",
+      itemCondition: `https://schema.org/${parsedListing.condition === "NEW" ? "NewCondition" : "UsedCondition"}`,
+    },
+  };
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
         {/* Image Gallery */}
         <div className="space-y-4">

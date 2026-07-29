@@ -11,11 +11,22 @@ const offerSchema = z.object({
   protected: z.boolean().optional().default(false),
 });
 
+import { checkRateLimit } from "@/lib/rate-limit";
+
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Rate limit: max 10 offer creations per minute per user
+    const limitResult = checkRateLimit(`offers:${session.user.id}`, 10, 60000);
+    if (!limitResult.success) {
+      return NextResponse.json(
+        { error: "Too many offer requests. Please slow down and try again shortly." },
+        { status: 429 }
+      );
     }
 
     const body = await req.json();

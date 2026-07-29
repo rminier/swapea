@@ -21,6 +21,12 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: "Swapea - The Trade-Only Marketplace",
   description: "Trade your items with ease. No cash, just value.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Swapea",
+  },
 };
 
 export default async function RootLayout({

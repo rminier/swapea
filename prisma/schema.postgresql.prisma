@@ -158,6 +158,8 @@ model Listing {
   @@index([category])
   @@index([condition])
   @@index([userId])
+  @@index([userId, softDeleted])
+  @@index([softDeleted, visibility, createdAt])
 }
 
 model Offer {
@@ -175,6 +177,9 @@ model Offer {
   offeredListings Listing[]   @relation("OfferedListings")
   
   trade           Trade?
+
+  @@index([proposingUserId, createdAt])
+  @@index([targetListingId, status])
 }
 
 model Trade {

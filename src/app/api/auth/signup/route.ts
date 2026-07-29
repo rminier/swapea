@@ -9,8 +9,19 @@ const signupSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+import { checkRateLimit } from "@/lib/rate-limit";
+
 export async function POST(req: Request) {
   try {
+    const ip = req.headers.get("x-forwarded-for") || "global-ip";
+    const limitResult = checkRateLimit(`signup:${ip}`, 5, 60000);
+    if (!limitResult.success) {
+      return NextResponse.json(
+        { error: "Too many registration attempts. Please try again in a minute." },
+        { status: 429 }
+      );
+    }
+
     const body = await req.json();
     const { name, email, password } = signupSchema.parse(body);
 
