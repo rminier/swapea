@@ -73,7 +73,7 @@ export function ProfileTabs({ user }: ProfileTabsProps) {
                 Featured Listings
               </h3>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 gap-3 sm:gap-4">
               {user.listings.slice(0, 2).map((listing) => (
                 <ListingCardEnhanced key={listing.id} listing={listing} hideUser />
               ))}
@@ -196,7 +196,7 @@ export function ProfileTabs({ user }: ProfileTabsProps) {
       </TabsContent>
 
       <TabsContent value="listings">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6">
           {user.listings.map((listing) => (
             <ListingCardEnhanced key={listing.id} listing={listing} hideUser />
           ))}
