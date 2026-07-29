@@ -83,8 +83,8 @@ export default async function FollowersPage({ params }: { params: Promise<{ user
               <Card key={f.following.username} className="border-border/50 bg-card/30 rounded-2xl overflow-hidden hover:border-primary/20 transition-colors">
                 <CardContent className="p-4 flex items-center gap-4">
                   <Avatar>
-                    <AvatarImage src={f.following.image} />
-                    <AvatarFallback>{f.following.name[0]}</AvatarFallback>
+                    <AvatarImage src={f.following.image || undefined} />
+                    <AvatarFallback>{f.following.name?.[0]}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <Link href={`/profile/${f.following.username}`} className="font-bold hover:underline block truncate">

@@ -28,8 +28,8 @@ export default async function Home() {
 
   const latestListings = latestListingsRaw.map(listing => ({
     ...listing,
-    images: JSON.parse(listing.images as string) as string[],
-    tags: JSON.parse(listing.tags as string) as string[],
+    images: (typeof listing.images === "string" ? JSON.parse(listing.images) : listing.images) as string[],
+    tags: (typeof listing.tags === "string" ? JSON.parse(listing.tags) : listing.tags) as string[],
     condition: listing.condition as ListingCondition,
   }));
 

@@ -189,8 +189,8 @@ export async function GET(req: Request) {
 
     const parsedItems = listings.map(listing => ({
       ...listing,
-      images: JSON.parse(listing.images as unknown as string),
-      tags: JSON.parse(listing.tags as unknown as string),
+      images: typeof listing.images === "string" ? JSON.parse(listing.images) : listing.images,
+      tags: typeof listing.tags === "string" ? JSON.parse(listing.tags) : listing.tags,
       isPromoted: !!listing.promoted?.active,
       offersCount: listing._count.targetOffers,
     }));

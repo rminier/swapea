@@ -37,13 +37,13 @@ export default async function TradePage({ params }: TradePageProps) {
   }
 
   // Parse strings to arrays
-  trade.offer.targetListing.images = JSON.parse(trade.offer.targetListing.images as unknown as string);
-  trade.offer.targetListing.tags = JSON.parse(trade.offer.targetListing.tags as unknown as string);
+  trade.offer.targetListing.images = (typeof trade.offer.targetListing.images === "string" ? JSON.parse(trade.offer.targetListing.images) : trade.offer.targetListing.images) as unknown as string[];
+  trade.offer.targetListing.tags = (typeof trade.offer.targetListing.tags === "string" ? JSON.parse(trade.offer.targetListing.tags) : trade.offer.targetListing.tags) as unknown as string[];
 
   trade.offer.offeredListings = trade.offer.offeredListings.map((listing) => ({
     ...listing,
-    images: JSON.parse(listing.images),
-    tags: JSON.parse(listing.tags),
+    images: typeof listing.images === "string" ? JSON.parse(listing.images) : listing.images,
+    tags: typeof listing.tags === "string" ? JSON.parse(listing.tags) : listing.tags,
   }));
 
   // Ensure user is part of the trade
@@ -78,7 +78,7 @@ export default async function TradePage({ params }: TradePageProps) {
                 <Link href={`/listings/${trade.offer.targetListingId}`}>
                   <div className="border border-border/50 rounded-xl overflow-hidden hover:border-purple-500/50 transition-colors bg-background">
                     {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
-                    <img src={trade.offer.targetListing.images[0]} className="w-full aspect-video object-cover" />
+                    <img src={(trade.offer.targetListing.images as string[])?.[0] || ""} className="w-full aspect-video object-cover" />
                     <div className="p-3">
                       <p className="font-medium line-clamp-1">{trade.offer.targetListing.title}</p>
                     </div>
@@ -100,7 +100,7 @@ export default async function TradePage({ params }: TradePageProps) {
                     <Link key={listing.id} href={`/listings/${listing.id}`} className="flex-1">
                       <div className="border border-border/50 rounded-xl overflow-hidden hover:border-purple-500/50 transition-colors bg-background">
                         {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
-                        <img src={listing.images[0]} className="w-full aspect-square object-cover" />
+                        <img src={(listing.images as string[])?.[0] || ""} className="w-full aspect-square object-cover" />
                         <div className="p-2">
                           <p className="text-xs font-medium line-clamp-1">{listing.title}</p>
                         </div>

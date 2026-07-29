@@ -27,8 +27,8 @@ export default async function ListingPage({ params }: ListingPageProps) {
 
   const parsedListing = {
     ...listing,
-    images: JSON.parse(listing.images as string) as string[],
-    tags: JSON.parse(listing.tags as string) as string[],
+    images: (typeof listing.images === "string" ? JSON.parse(listing.images) : listing.images) as string[],
+    tags: (typeof listing.tags === "string" ? JSON.parse(listing.tags) : listing.tags) as string[],
   };
 
   const conditionColors: Record<string, string> = {

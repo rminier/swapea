@@ -19,8 +19,8 @@ export async function GET() {
     });
     const parsedListings = listings.map((listing) => ({
       ...listing,
-      images: JSON.parse(listing.images),
-      tags: JSON.parse(listing.tags),
+      images: typeof listing.images === "string" ? JSON.parse(listing.images) : listing.images,
+      tags: typeof listing.tags === "string" ? JSON.parse(listing.tags) : listing.tags,
     }));
 
     return NextResponse.json(parsedListings);

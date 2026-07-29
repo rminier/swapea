@@ -71,7 +71,7 @@ export function ProfileHeader({ user, isOwner }: ProfileHeaderProps) {
             {/* Avatar */}
             <div className="relative group flex-shrink-0">
               <Avatar className="h-40 w-40 border-8 border-background shadow-2xl rounded-3xl overflow-hidden hover:scale-[1.02] transition-transform duration-300">
-                <AvatarImage src={user.image} className="object-cover animate-fade-in" />
+                <AvatarImage src={user.image || undefined} className="object-cover animate-fade-in" />
                 <AvatarFallback className="text-5xl font-black bg-gradient-to-tr from-indigo-600 via-purple-600 to-pink-500 text-white font-heading tracking-wider flex items-center justify-center">
                   {user.name?.[0]?.toUpperCase() || user.username?.[0]?.toUpperCase() || "U"}
                 </AvatarFallback>

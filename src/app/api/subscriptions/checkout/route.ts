@@ -25,13 +25,13 @@ export async function POST(req: Request) {
       await prisma.subscription.upsert({
         where: { userId: session.user.id },
         update: {
-          plan,
+          plan: plan as "BASIC" | "PREMIUM" | "VIP",
           active: true,
           expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         },
         create: {
           userId: session.user.id,
-          plan,
+          plan: plan as "BASIC" | "PREMIUM" | "VIP",
           active: true,
           expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         },

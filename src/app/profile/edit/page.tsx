@@ -26,7 +26,10 @@ export default async function EditProfilePage() {
           <p className="text-lg text-muted-foreground mt-2">Manage your public presence and account settings.</p>
         </div>
         
-        <EditProfileForm initialData={user} />
+        <EditProfileForm initialData={{
+          ...user,
+          privacySettings: typeof user.privacySettings === "string" ? user.privacySettings : JSON.stringify(user.privacySettings),
+        }} />
       </div>
     </div>
   );

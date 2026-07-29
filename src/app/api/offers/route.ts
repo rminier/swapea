@@ -150,13 +150,13 @@ export async function GET(req: Request) {
       ...offer,
       targetListing: {
         ...offer.targetListing,
-        images: JSON.parse(offer.targetListing.images),
-        tags: JSON.parse(offer.targetListing.tags),
+        images: typeof offer.targetListing.images === "string" ? JSON.parse(offer.targetListing.images) : offer.targetListing.images,
+        tags: typeof offer.targetListing.tags === "string" ? JSON.parse(offer.targetListing.tags) : offer.targetListing.tags,
       },
       offeredListings: offer.offeredListings.map((l) => ({
         ...l,
-        images: JSON.parse(l.images),
-        tags: JSON.parse(l.tags),
+        images: typeof l.images === "string" ? JSON.parse(l.images) : l.images,
+        tags: typeof l.tags === "string" ? JSON.parse(l.tags) : l.tags,
       }))
     }));
 

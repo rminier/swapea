@@ -51,7 +51,7 @@ export async function GET(
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    const privacySettings = JSON.parse(user.privacySettings);
+    const privacySettings = typeof user.privacySettings === "string" ? JSON.parse(user.privacySettings) : user.privacySettings;
     const isOwner = session?.user?.email === user.email;
 
     const publicProfile = {
@@ -60,7 +60,7 @@ export async function GET(
       username: user.username,
       image: user.image,
       bio: user.bio,
-      location: privacySettings.showLocation ? user.location : null,
+      location: privacySettings?.showLocation ? user.location : null,
       reputation: user.reputation,
       joinedAt: user.createdAt,
       stats: {
@@ -71,8 +71,8 @@ export async function GET(
       },
       listings: user.listings.map(l => ({
         ...l,
-        images: JSON.parse(l.images as string),
-        tags: JSON.parse(l.tags as string),
+        images: typeof l.images === "string" ? JSON.parse(l.images) : l.images,
+        tags: typeof l.tags === "string" ? JSON.parse(l.tags) : l.tags,
         user: {
           name: user.name || user.username || "User",
           reputation: user.reputation,

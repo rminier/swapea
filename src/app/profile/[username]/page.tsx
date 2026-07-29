@@ -53,6 +53,8 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   // Normalize data for components
   const normalizedUser = {
     ...user,
+    name: user.name || user.username || "User",
+    username: user.username || "user",
     stats: {
       listingsCount: user._count.listings,
       followersCount: user._count.followers,
@@ -61,14 +63,26 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     },
     listings: user.listings.map(l => ({
       ...l,
-      images: JSON.parse(l.images as string),
-      tags: JSON.parse(l.tags as string),
+      createdAt: l.createdAt.toISOString(),
+      updatedAt: l.updatedAt.toISOString(),
+      images: typeof l.images === "string" ? JSON.parse(l.images) : l.images,
+      tags: typeof l.tags === "string" ? JSON.parse(l.tags) : l.tags,
       user: {
         name: user.name || user.username || "User",
         reputation: user.reputation,
       },
     })),
-    reviews: user.receivedRatings,
+    reviews: user.receivedRatings.map(r => ({
+      ...r,
+      rating: r.score,
+      comment: r.comment || "",
+      createdAt: r.createdAt.toISOString(),
+      giver: {
+        name: r.giver.name || r.giver.username || "User",
+        image: r.giver.image || undefined,
+        username: r.giver.username || undefined,
+      }
+    })),
     isFollowing: false,
   };
 

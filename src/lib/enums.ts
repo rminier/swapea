@@ -20,6 +20,7 @@ export type OfferStatus = keyof typeof OfferStatus;
 
 export const TradeStatus = {
   PENDING: 'PENDING',
+  ACTIVE: 'ACTIVE',
   IN_PROGRESS: 'IN_PROGRESS',
   COMPLETED: 'COMPLETED',
   CANCELLED: 'CANCELLED',

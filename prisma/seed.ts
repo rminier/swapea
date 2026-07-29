@@ -121,7 +121,7 @@ async function main() {
   });
 
   // 6. Create 25 additional listings
-  const conditions = ['NEW', 'LIKE_NEW', 'GOOD', 'FAIR', 'POOR'];
+  const conditions: ('NEW' | 'LIKE_NEW' | 'GOOD' | 'FAIR' | 'POOR')[] = ['NEW', 'LIKE_NEW', 'GOOD', 'FAIR', 'POOR'];
   const locations = ['San Francisco, CA', 'Austin, TX', 'Seattle, WA', 'Chicago, IL', 'Miami, FL', 'Denver, CO'];
   
   const additionalListings = [

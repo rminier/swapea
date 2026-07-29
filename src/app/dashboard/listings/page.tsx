@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 export default function DashboardListingsPage() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: listings = [], isLoading, refetch: fetchListings } = useQuery({
+  const { data: listings = [], isLoading, refetch: fetchListings } = useQuery<any[]>({
     queryKey: ["myManagedListings"],
     queryFn: async () => {
       const res = await fetch("/api/me/listings");

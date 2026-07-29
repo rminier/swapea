@@ -17,8 +17,8 @@ export async function GET() {
 
   const normalized = listings.map(l => ({
     ...l,
-    images: JSON.parse(l.images as string),
-    tags: JSON.parse(l.tags as string),
+    images: typeof l.images === "string" ? JSON.parse(l.images) : l.images,
+    tags: typeof l.tags === "string" ? JSON.parse(l.tags) : l.tags,
     isPromoted: !!l.promoted?.active,
   }));
 

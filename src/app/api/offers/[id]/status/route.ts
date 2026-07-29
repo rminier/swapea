@@ -111,7 +111,7 @@ export async function PUT(
         await prisma.trade.create({
           data: {
             offerId: offer.id,
-            status: TradeStatus.IN_PROGRESS,
+            status: TradeStatus.ACTIVE,
           },
         });
       }

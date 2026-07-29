@@ -119,7 +119,7 @@ export function EditProfileForm({ initialData }: { initialData: InitialProfileDa
             <div className="flex flex-col md:flex-row items-center gap-8">
               <div className="relative">
                 <Avatar className="h-32 w-32 border-4 border-background shadow-lg">
-                  <AvatarImage src={initialData.image} />
+                  <AvatarImage src={initialData.image || undefined} />
                   <AvatarFallback className="text-2xl font-bold bg-muted">{initialData.name?.[0]}</AvatarFallback>
                 </Avatar>
                 <label className="absolute bottom-0 right-0 p-2 bg-primary text-white rounded-full cursor-pointer shadow-lg hover:scale-110 transition-transform">
