@@ -12,8 +12,11 @@ import {
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
+import { useLanguage } from "@/components/language-provider";
+
 export function SearchBar() {
   const { query, updateQuery } = useListingsQuery();
+  const { t } = useLanguage();
   const [value, setValue] = useState(query.q);
   const [prevQueryQ, setPrevQueryQ] = useState(query.q);
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -73,7 +76,7 @@ export function SearchBar() {
               value={value}
               onChange={handleChange}
               onKeyDown={(e) => e.key === "Enter" && handleSearch(value)}
-              placeholder="Search items by title, category, or tags..."
+              placeholder={t("listings.search_placeholder")}
               className="pl-12 pr-10 h-14 rounded-2xl bg-card border-border/50 shadow-sm focus-visible:ring-2 focus-visible:ring-primary/20 text-lg transition-all"
             />
             {value && (

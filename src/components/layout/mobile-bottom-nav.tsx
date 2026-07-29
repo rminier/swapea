@@ -6,36 +6,39 @@ import { Home, Package, Plus, ArrowRightLeft, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { triggerHaptic } from "@/lib/capacitor";
 
+import { useLanguage } from "@/components/language-provider";
+
 export function MobileBottomNav() {
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   const navItems = [
     {
-      label: "Explore",
+      label: t("navbar.home") !== "navbar.home" ? t("navbar.home") : "Explore",
       href: "/",
       icon: Home,
       exact: true,
     },
     {
-      label: "Listings",
+      label: t("listings.title") !== "listings.title" ? t("listings.title").split(" ")[0] : "Listings",
       href: "/listings",
       icon: Package,
       exact: true,
     },
     {
-      label: "Post",
+      label: t("navbar.new_listing") !== "navbar.new_listing" ? t("navbar.new_listing").split(" ")[0] : "Post",
       href: "/listings/new",
       icon: Plus,
       isAction: true,
     },
     {
-      label: "Offers",
+      label: t("navbar.offers") !== "navbar.offers" ? t("navbar.offers").split(" ")[0] : "Offers",
       href: "/offers",
       icon: ArrowRightLeft,
       exact: false,
     },
     {
-      label: "Settings",
+      label: t("navbar.settings") !== "navbar.settings" ? t("navbar.settings") : "Settings",
       href: "/settings",
       icon: Settings,
       exact: false,

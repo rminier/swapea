@@ -16,6 +16,7 @@ import { CounterOfferModal } from "@/components/counter-offer-modal";
 import { useSession } from "next-auth/react";
 import { AuthPromptBanner } from "@/components/auth-prompt-banner";
 import { SubscriptionTiers } from "@/components/subscription-tiers";
+import { useLanguage } from "@/components/language-provider";
 
 export default function OffersPage() {
   const { data: session, status: authStatus } = useSession();
@@ -31,12 +32,14 @@ export default function OffersPage() {
     enabled: authStatus === "authenticated",
   });
 
+  const { t } = useLanguage();
+
   if (authStatus === "unauthenticated") {
     return (
       <div className="container mx-auto px-4 py-12 max-w-5xl space-y-12">
         <AuthPromptBanner 
-          title="Access Offers & Trades" 
-          description="Log in or create a Swapea account to view active offers, send trade proposals, and upgrade your plan." 
+          title={t("offers.auth_title")} 
+          description={t("offers.auth_desc")} 
           callbackUrl="/offers" 
         />
         <SubscriptionTiers 
@@ -65,12 +68,12 @@ export default function OffersPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-5xl">
-      <h1 className="text-3xl font-bold mb-8 tracking-tight">Offers & Trades</h1>
+      <h1 className="text-3xl font-bold mb-8 tracking-tight font-heading">{t("offers.title")}</h1>
 
       <Tabs defaultValue="received" onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-2 max-w-md mb-8">
-          <TabsTrigger value="received">Received</TabsTrigger>
-          <TabsTrigger value="sent">Sent</TabsTrigger>
+          <TabsTrigger value="received">{t("offers.received")}</TabsTrigger>
+          <TabsTrigger value="sent">{t("offers.sent")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value={activeTab} className="space-y-6">
@@ -78,7 +81,7 @@ export default function OffersPage() {
             <div className="flex justify-center p-12"><div className="animate-spin w-8 h-8 rounded-full border-b-2 border-primary"></div></div>
           ) : offers?.length === 0 ? (
             <div className="text-center py-16 bg-muted/30 rounded-2xl border border-border/50 border-dashed">
-              <p className="text-muted-foreground text-lg mb-4">No {activeTab} offers found.</p>
+              <p className="text-muted-foreground text-lg mb-4">{activeTab === "received" ? t("offers.no_received") : t("offers.no_sent")}</p>
               <Link href="/">
                 <Button variant="outline">
                   {activeTab === "sent" ? "Explore Listings" : "Create a Listing"}

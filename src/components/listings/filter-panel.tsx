@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Filter, ChevronLeft, ChevronRight, ChevronDown, MapPin, Star, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/components/language-provider";
 
 interface CategoryStructure {
   name: string;
@@ -148,6 +149,7 @@ interface FacetCounts {
 
 export function FilterPanel({ meta }: { meta?: { facetCounts: FacetCounts } }) {
   const { query, updateQuery, clearFilters } = useListingsQuery();
+  const { t } = useLanguage();
   const [collapsed, setCollapsed] = useState(false);
   const [expandedCategories, setExpandedCategories] = useState<string[]>(["Clothing", "Collectibles", "Video Games", "Books", "Home"]);
 
@@ -176,16 +178,19 @@ export function FilterPanel({ meta }: { meta?: { facetCounts: FacetCounts } }) {
     updateQuery({ categories: newCats });
   };
 
-  const toggleExpand = (dbValue: string) => {
+  const toggleExpand = (catValue: string) => {
     setExpandedCategories(prev =>
-      prev.includes(dbValue)
-        ? prev.filter(v => v !== dbValue)
-        : [...prev, dbValue]
+      prev.includes(catValue)
+        ? prev.filter(v => v !== catValue)
+        : [...prev, catValue]
     );
   };
 
-  const getCount = (type: 'categories' | 'conditions', name: string) => {
-    return meta?.facetCounts[type]?.find(f => f.name === name)?.count || 0;
+  const getCount = (type: 'categories' | 'conditions', key: string) => {
+    if (!meta || !meta.facetCounts) return 0;
+    const list = meta.facetCounts[type] || [];
+    const item = list.find((i: { name: string; count: number }) => i.name === key);
+    return item ? item.count : 0;
   };
 
   const getGroupCount = (cat: CategoryStructure) => {
@@ -231,10 +236,10 @@ export function FilterPanel({ meta }: { meta?: { facetCounts: FacetCounts } }) {
           </div>
         ) : (
           <>
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between pb-4 border-b border-border/40">
               <div className="flex items-center gap-2">
                 <Filter className="h-5 w-5 text-primary" />
-                <h2 className="font-bold text-xl tracking-tight">Filters</h2>
+                <h2 className="font-bold text-xl tracking-tight font-heading">{t("listings.filters.title")}</h2>
               </div>
               <Button 
                 variant="ghost" 
@@ -247,12 +252,12 @@ export function FilterPanel({ meta }: { meta?: { facetCounts: FacetCounts } }) {
             </div>
 
             <ScrollArea className="flex-1 -mx-2 px-2">
-              <div className="space-y-8 pb-10">
+              <div className="space-y-8 pt-6 pb-10">
                 {/* Promoted Toggle */}
                 <div className="flex items-center justify-between p-3 rounded-xl bg-primary/5 border border-primary/10">
                   <div className="flex items-center gap-2">
                     <Sparkles className="h-4 w-4 text-amber-500" />
-                    <Label htmlFor="promoted" className="text-sm font-medium cursor-pointer">Promoted Only</Label>
+                    <Label htmlFor="promoted" className="text-sm font-medium cursor-pointer">{t("listings.filters.promoted_only")}</Label>
                   </div>
                   <Switch 
                     id="promoted" 
@@ -263,7 +268,7 @@ export function FilterPanel({ meta }: { meta?: { facetCounts: FacetCounts } }) {
 
                 {/* Categories */}
                 <div className="space-y-4">
-                  <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground/70">Category</h3>
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground/70">{t("listings.filters.categories")}</h3>
                   <div className="space-y-3">
                     {CATEGORY_STRUCTURE.map((cat) => (
                       <div key={cat.dbValue} className="space-y-2">
