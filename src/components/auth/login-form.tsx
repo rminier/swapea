@@ -19,6 +19,8 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 
+import { useLanguage } from "@/components/language-provider";
+
 const loginSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
@@ -31,6 +33,7 @@ export function LoginForm() {
   const searchParams = useSearchParams();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { t } = useLanguage();
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -72,7 +75,7 @@ export function LoginForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t("auth.email")}</FormLabel>
               <FormControl>
                 <Input placeholder="name@example.com" {...field} className="rounded-xl h-11" />
               </FormControl>
@@ -85,7 +88,7 @@ export function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t("auth.password")}</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
@@ -107,9 +110,9 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full h-11 rounded-xl bg-brand-button" disabled={isLoading}>
+        <Button type="submit" className="w-full h-11 rounded-xl bg-brand-button font-bold" disabled={isLoading}>
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Sign In
+          {t("auth.login_button")}
         </Button>
       </form>
     </Form>

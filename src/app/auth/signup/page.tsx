@@ -1,22 +1,27 @@
+"use client";
+
 import { AuthLayout } from "@/components/auth/auth-layout";
 import { SignupForm } from "@/components/auth/signup-form";
 import Link from "next/link";
+import { useLanguage } from "@/components/language-provider";
 
 export default function SignupPage() {
+  const { t } = useLanguage();
+
   return (
     <AuthLayout
-      title="Create an account"
-      description="Enter your details below to create your account"
+      title={t("auth.signup_title")}
+      description={t("auth.signup_subtitle")}
     >
       <div className="grid gap-6">
         <SignupForm />
         <div className="text-center text-sm">
-          Already have an account?{" "}
+          {t("auth.already_have_account")}{" "}
           <Link
             href="/auth/login"
             className="font-bold text-primary hover:underline"
           >
-            Sign In
+            {t("auth.login_button")}
           </Link>
         </div>
       </div>

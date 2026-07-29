@@ -18,6 +18,8 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Loader2, Eye, EyeOff } from "lucide-react";
 
+import { useLanguage } from "@/components/language-provider";
+
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email address"),
@@ -30,6 +32,7 @@ export function SignupForm() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const { t } = useLanguage();
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -73,7 +76,7 @@ export function SignupForm() {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Full Name</FormLabel>
+              <FormLabel>{t("auth.name")}</FormLabel>
               <FormControl>
                 <Input placeholder="John Doe" {...field} className="rounded-xl h-11" />
               </FormControl>
@@ -86,7 +89,7 @@ export function SignupForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>{t("auth.email")}</FormLabel>
               <FormControl>
                 <Input placeholder="name@example.com" {...field} className="rounded-xl h-11" />
               </FormControl>
@@ -99,7 +102,7 @@ export function SignupForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t("auth.password")}</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
@@ -121,9 +124,9 @@ export function SignupForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full h-11 rounded-xl bg-brand-button" disabled={isLoading}>
+        <Button type="submit" className="w-full h-11 rounded-xl bg-brand-button font-bold" disabled={isLoading}>
           {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          Create Account
+          {t("auth.signup_button")}
         </Button>
       </form>
     </Form>
