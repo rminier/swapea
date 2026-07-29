@@ -39,9 +39,29 @@ export default async function ListingsPage({ searchParams }: ListingsPageProps) 
   if (params.cursor) apiUrl.searchParams.set("cursor", params.cursor);
   apiUrl.searchParams.set("limit", "12");
 
-  // Fetch initial data SSR
-  const res = await fetch(apiUrl.toString(), { cache: "no-store" });
-  const initialData = await res.json();
+  // Fetch initial data SSR with fallback to prevent HTML error page JSON parse crashes
+  let initialData = { 
+    items: [], 
+    nextCursor: undefined,
+    meta: { 
+      facetCounts: { 
+        categories: [] as { name: string; count: number }[], 
+        conditions: [] as { name: string; count: number }[] 
+      } 
+    } 
+  };
+
+  try {
+    const res = await fetch(apiUrl.toString(), { cache: "no-store" });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.items)) {
+        initialData = data;
+      }
+    }
+  } catch (err) {
+    console.error("SSR listings fetch fallback triggered:", err);
+  }
 
   return (
     <div className="flex h-[calc(100vh-64px)] overflow-hidden bg-background">

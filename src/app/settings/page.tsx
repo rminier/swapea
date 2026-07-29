@@ -18,8 +18,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import { AuthPromptBanner } from "@/components/auth-prompt-banner";
+import { SubscriptionTiers } from "@/components/subscription-tiers";
+
 export default function SettingsPage() {
-  const { data: session } = useSession();
+  const { data: session, status: authStatus } = useSession();
   const [isUpgrading, setIsUpgrading] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const router = useRouter();
@@ -38,7 +41,55 @@ export default function SettingsPage() {
       if (!res.ok) return null;
       return res.json();
     },
+    enabled: authStatus === "authenticated",
   });
+
+  if (authStatus === "unauthenticated") {
+    return (
+      <div className="container mx-auto px-4 py-12 max-w-6xl space-y-12">
+        <AuthPromptBanner 
+          title={t("settings.title") || "Account & Membership Settings"} 
+          description="Log in or create a Swapea account to view profile settings, switch language, and upgrade your subscription." 
+          callbackUrl="/settings" 
+        />
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          <div className="lg:col-span-1">
+            <Card className="border-border/50 bg-card/50 backdrop-blur-sm rounded-3xl overflow-hidden shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold font-heading">{t("settings.language_title")}</CardTitle>
+                <CardDescription>{t("settings.language_desc")}</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                    {t("settings.language_select_label")}
+                  </label>
+                  <Select value={language} onValueChange={(val: Language | null) => handleLanguageChange(val)}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder={t("settings.language_select_label")} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="en">🇺🇸 {t("settings.english")}</SelectItem>
+                      <SelectItem value="es">🇪🇸 {t("settings.spanish")}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="lg:col-span-2">
+            <SubscriptionTiers 
+              onUpgrade={() => {
+                window.location.href = "/auth/login?callbackUrl=/settings";
+              }}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handleUpgrade = async (plan: string) => {
     setIsUpgrading(true);
@@ -185,69 +236,12 @@ export default function SettingsPage() {
         </div>
 
         {/* Pricing Matrix */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="space-y-2">
-            <h2 className="text-2xl font-extrabold tracking-tight font-heading">{t("settings.subscription_plans")}</h2>
-            <p className="text-sm text-muted-foreground">
-              {t("settings.subscription_desc")}
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {tiers.map((tier) => {
-              const isCurrent = currentPlan === tier.id;
-              return (
-                <Card 
-                  key={tier.id} 
-                  className={`relative border-border/50 bg-card/30 backdrop-blur-sm rounded-3xl overflow-hidden shadow-md transition-all flex flex-col justify-between hover:shadow-xl hover:scale-[1.01] duration-300 ${
-                    isCurrent ? "ring-2 ring-purple-500 border-transparent bg-gradient-to-b from-purple-500/5 to-transparent" : ""
-                  }`}
-                >
-                  {isCurrent && (
-                    <div className="absolute top-0 right-0 bg-purple-500 text-white text-[9px] font-black tracking-widest px-3 py-1 rounded-bl-xl uppercase">
-                      {t("settings.active_plan")}
-                    </div>
-                  )}
-                  
-                  <CardHeader className="space-y-3">
-                    <div className="space-y-1">
-                      <CardTitle className="text-lg font-black">{tier.name}</CardTitle>
-                      <CardDescription className="text-xs min-h-[32px]">{tier.description}</CardDescription>
-                    </div>
-                    <div className="flex items-end gap-1">
-                      <span className="text-3xl font-extrabold tracking-tight">{tier.price}</span>
-                      <span className="text-muted-foreground text-xs pb-1">/month</span>
-                    </div>
-                  </CardHeader>
-
-                  <CardContent className="space-y-4 flex-grow">
-                    <ul className="space-y-2.5">
-                      {tier.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-start text-xs text-muted-foreground">
-                          <Check className="w-4 h-4 text-green-500 mr-2 shrink-0 mt-0.5" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </CardContent>
-
-                  <CardFooter className="pt-4 border-t border-border/40 bg-muted/10">
-                    <Button 
-                      className={`w-full rounded-2xl font-bold py-5 transition-all duration-300 ${tier.buttonColor}`}
-                      onClick={() => handleUpgrade(tier.id)}
-                      disabled={isUpgrading || isCurrent}
-                    >
-                      {isCurrent 
-                        ? t("settings.current_plan_button") 
-                        : isUpgrading 
-                        ? t("settings.processing") 
-                        : t("settings.subscribe_to", { name: tier.name })}
-                    </Button>
-                  </CardFooter>
-                </Card>
-              );
-            })}
-          </div>
+        <div className="lg:col-span-2">
+          <SubscriptionTiers 
+            currentPlan={currentPlan}
+            onUpgrade={handleUpgrade}
+            isUpgrading={isUpgrading}
+          />
         </div>
       </div>
     </div>

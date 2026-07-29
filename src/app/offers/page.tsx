@@ -13,7 +13,12 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { CounterOfferModal } from "@/components/counter-offer-modal";
 
+import { useSession } from "next-auth/react";
+import { AuthPromptBanner } from "@/components/auth-prompt-banner";
+import { SubscriptionTiers } from "@/components/subscription-tiers";
+
 export default function OffersPage() {
+  const { data: session, status: authStatus } = useSession();
   const [activeTab, setActiveTab] = useState("received");
 
   const { data: offers, isLoading, refetch } = useQuery({
@@ -23,7 +28,25 @@ export default function OffersPage() {
       if (!res.ok) throw new Error("Failed to fetch");
       return res.json();
     },
+    enabled: authStatus === "authenticated",
   });
+
+  if (authStatus === "unauthenticated") {
+    return (
+      <div className="container mx-auto px-4 py-12 max-w-5xl space-y-12">
+        <AuthPromptBanner 
+          title="Access Offers & Trades" 
+          description="Log in or create a Swapea account to view active offers, send trade proposals, and upgrade your plan." 
+          callbackUrl="/offers" 
+        />
+        <SubscriptionTiers 
+          onUpgrade={() => {
+            window.location.href = "/auth/login?callbackUrl=/offers";
+          }}
+        />
+      </div>
+    );
+  }
 
   const handleStatusChange = async (offerId: string, status: string) => {
     try {
