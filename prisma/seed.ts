@@ -99,7 +99,7 @@ async function main() {
   const trade = await prisma.trade.create({
     data: {
       offerId: offer.id,
-      status: 'IN_PROGRESS',
+      status: 'ACTIVE',
     },
   });
 
