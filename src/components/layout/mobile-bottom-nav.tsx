@@ -52,7 +52,7 @@ export function MobileBottomNav() {
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-card/95 backdrop-blur-2xl border-t border-border/60 shadow-[0_-8px_30px_rgba(0,0,0,0.4)] px-3 pt-1.5 pb-[max(12px,env(safe-area-inset-bottom))]">
+    <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-card/95 backdrop-blur-2xl border-t border-border/60 shadow-[0_-8px_30px_rgba(0,0,0,0.4)] px-3 pt-2 pb-[max(20px,calc(16px+env(safe-area-inset-bottom,12px)))]">
       <nav className="flex items-center justify-between max-w-md mx-auto h-12">
         {navItems.map((item) => {
           const isActive = item.exact
