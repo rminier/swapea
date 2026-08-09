@@ -33,6 +33,8 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ImagePlus, X, Loader2 } from "lucide-react";
 
+import { useLanguage } from "@/components/language-provider";
+
 const formSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters").max(100),
   description: z.string().min(10, "Description must be at least 10 characters"),
@@ -43,6 +45,7 @@ const formSchema = z.object({
 
 export function ListingForm() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [images, setImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
@@ -171,10 +174,10 @@ export function ListingForm() {
     <Card className="w-full max-w-2xl mx-auto border-border/50 bg-card/50 backdrop-blur-sm shadow-xl">
       <CardHeader>
         <CardTitle className="text-3xl font-bold text-brand-gradient">
-          List an Item
+          {t("new_listing.title")}
         </CardTitle>
         <CardDescription>
-          What do you have to offer? The more details, the better trade offers you&apos;ll receive.
+          {t("new_listing.subtitle")}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -183,7 +186,7 @@ export function ListingForm() {
             
             {/* Image Upload Section */}
             <div className="space-y-3">
-              <FormLabel>Images</FormLabel>
+              <FormLabel>{t("new_listing.images")}</FormLabel>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {images.map((url, i) => (
                   <div key={i} className="relative aspect-square rounded-md overflow-hidden border border-border">
@@ -212,13 +215,13 @@ export function ListingForm() {
                     ) : (
                       <>
                         <ImagePlus className="h-6 w-6 text-muted-foreground mb-2" />
-                        <span className="text-xs text-muted-foreground">Add Photo</span>
+                        <span className="text-xs text-muted-foreground">{t("new_listing.add_photo")}</span>
                       </>
                     )}
                   </label>
                 )}
               </div>
-              <FormDescription>Upload up to 5 images. First image will be the cover.</FormDescription>
+              <FormDescription>{t("new_listing.images_desc")}</FormDescription>
             </div>
 
             <FormField
@@ -226,9 +229,9 @@ export function ListingForm() {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Title</FormLabel>
+                  <FormLabel>{t("new_listing.item_title")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Vintage Polaroid Camera" {...field} />
+                    <Input placeholder={t("new_listing.item_title_placeholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -241,7 +244,7 @@ export function ListingForm() {
                 name="category"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Category</FormLabel>
+                    <FormLabel>{t("new_listing.category")}</FormLabel>
                     <Select 
                       onValueChange={(val) => {
                         if (!val) return;
@@ -266,7 +269,7 @@ export function ListingForm() {
                     >
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select a category" />
+                          <SelectValue placeholder={t("new_listing.select_category")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent className="max-h-[300px] overflow-y-auto rounded-xl">
@@ -318,19 +321,19 @@ export function ListingForm() {
                 name="condition"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Condition</FormLabel>
+                    <FormLabel>{t("new_listing.condition")}</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select condition" />
+                          <SelectValue placeholder={t("new_listing.select_condition")} />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="NEW">New</SelectItem>
-                        <SelectItem value="LIKE_NEW">Like New</SelectItem>
-                        <SelectItem value="GOOD">Good</SelectItem>
-                        <SelectItem value="FAIR">Fair</SelectItem>
-                        <SelectItem value="POOR">Poor</SelectItem>
+                        <SelectItem value="NEW">{t("new_listing.conditions.NEW")}</SelectItem>
+                        <SelectItem value="LIKE_NEW">{t("new_listing.conditions.LIKE_NEW")}</SelectItem>
+                        <SelectItem value="GOOD">{t("new_listing.conditions.GOOD")}</SelectItem>
+                        <SelectItem value="FAIR">{t("new_listing.conditions.FAIR")}</SelectItem>
+                        <SelectItem value="POOR">{t("new_listing.conditions.POOR")}</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -344,9 +347,9 @@ export function ListingForm() {
               name="location"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Location</FormLabel>
+                  <FormLabel>{t("new_listing.location")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Brooklyn, NY or Local Zip Code" {...field} />
+                    <Input placeholder={t("new_listing.location_placeholder")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -358,10 +361,10 @@ export function ListingForm() {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>{t("new_listing.description")}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Describe the item, what's included, and any defects..."
+                      placeholder={t("new_listing.description_placeholder")}
                       className="resize-none h-32"
                       {...field}
                     />
@@ -374,12 +377,12 @@ export function ListingForm() {
             <Button 
               type="submit" 
               disabled={form.formState.isSubmitting}
-              className="w-full bg-brand-button rounded-full py-6 text-lg"
+              className="w-full bg-brand-button rounded-full py-6 text-lg font-bold"
             >
               {form.formState.isSubmitting ? (
-                <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> Publishing...</>
+                <><Loader2 className="mr-2 h-5 w-5 animate-spin" /> {t("new_listing.publishing")}</>
               ) : (
-                "Publish Listing"
+                t("new_listing.publish_button")
               )}
             </Button>
           </form>
@@ -390,26 +393,26 @@ export function ListingForm() {
         <DialogContent className="sm:max-w-[450px] bg-card/90 backdrop-blur-xl border border-border/40 shadow-2xl">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold flex items-center gap-2">
-              <span className="text-2xl">🔒</span> Upgrade to Premium
+              <span className="text-2xl">🔒</span> {t("new_listing.upgrade_dialog.title")}
             </DialogTitle>
             <DialogDescription className="pt-2 text-sm leading-relaxed">
-              &quot;{selectedPremiumCategory}&quot; is a premium category. Publishing high-value trades in categories like cars, real estate, jewelry, or electronics requires a **Premium or VIP Membership**.
+              {t("new_listing.upgrade_dialog.desc").replace("{category}", selectedPremiumCategory)}
             </DialogDescription>
           </DialogHeader>
           <div className="py-4 space-y-3">
             <div className="p-4 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-semibold leading-relaxed">
-              ⭐ Premium members get unlimited listings, priority offer boosting, auto-relist bumps, and full access to all trade categories!
+              {t("new_listing.upgrade_dialog.perks")}
             </div>
           </div>
           <DialogFooter className="flex gap-2">
             <Button variant="outline" onClick={() => setShowUpgradeDialog(false)} className="rounded-full">
-              Maybe Later
+              {t("new_listing.upgrade_dialog.later")}
             </Button>
             <Button 
               onClick={() => router.push("/settings")} 
               className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white border-0 rounded-full"
             >
-              View Membership Plans
+              {t("new_listing.upgrade_dialog.upgrade")}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -6,6 +6,8 @@ import { formatDistanceToNow } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { OfferModal } from "@/components/offer-modal";
 import { Button } from "@/components/ui/button";
+import { cookies } from "next/headers";
+import { getDictionary } from "@/lib/dictionaries";
 
 import type { Metadata } from "next";
 
@@ -44,6 +46,9 @@ export async function generateMetadata({ params }: ListingPageProps): Promise<Me
 
 export default async function ListingPage({ params }: ListingPageProps) {
   const { id } = await params;
+  const cookieStore = await cookies();
+  const lang = (cookieStore.get("language")?.value || "en") as "en" | "es";
+  const t = await getDictionary(lang);
   
   const listing = await prisma.listing.findUnique({
     where: { id },
@@ -135,7 +140,7 @@ export default async function ListingPage({ params }: ListingPageProps) {
               </div>
               <div className="flex items-center">
                 <Clock className="w-4 h-4 mr-1" />
-                Listed {formatDistanceToNow(new Date(parsedListing.createdAt), { addSuffix: true })}
+                {formatDistanceToNow(new Date(parsedListing.createdAt), { addSuffix: true })}
               </div>
             </div>
           </div>
@@ -150,19 +155,18 @@ export default async function ListingPage({ params }: ListingPageProps) {
                 <p className="font-semibold">{parsedListing.user.name}</p>
                 <div className="flex items-center text-sm text-amber-500">
                   <span className="font-bold">{parsedListing.user.reputation.toFixed(1)}</span>
-                  <span className="text-xs ml-1 text-muted-foreground">★ Rating</span>
+                  <span className="text-xs ml-1 text-muted-foreground">★ {t.listing_detail.reputation}</span>
                 </div>
               </div>
             </div>
             
             <div className="w-full md:w-auto">
-              {/* Check if user is the owner, if not show make offer */}
               <OfferModal 
                 targetListingId={parsedListing.id} 
                 targetListingTitle={parsedListing.title} 
                 trigger={
-                  <Button size="lg" className="w-full md:w-auto rounded-full bg-brand-button text-lg px-8">
-                    Make Offer
+                  <Button size="lg" className="w-full md:w-auto rounded-full bg-brand-button text-lg px-8 font-bold">
+                    {t.listing_detail.make_offer}
                   </Button>
                 }
               />
@@ -170,20 +174,20 @@ export default async function ListingPage({ params }: ListingPageProps) {
           </div>
 
           <div>
-            <h3 className="text-xl font-semibold mb-3">Description</h3>
+            <h3 className="text-xl font-semibold mb-3">{t.listing_detail.description}</h3>
             <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground leading-relaxed whitespace-pre-wrap">
               {parsedListing.description}
             </div>
           </div>
 
           <div className="pt-6 border-t border-border/30 flex justify-between items-center text-sm text-muted-foreground">
-            <div className="flex items-center text-emerald-500 bg-emerald-500/10 px-3 py-1.5 rounded-full">
+            <div className="flex items-center text-emerald-500 bg-emerald-500/10 px-3 py-1.5 rounded-full font-medium">
               <ShieldCheck className="w-4 h-4 mr-1.5" />
-              <span>Verified Trader</span>
+              <span>{t.offers.protected_badge}</span>
             </div>
-            <button className="flex items-center hover:text-red-400 transition-colors">
+            <button className="flex items-center hover:text-red-400 transition-colors font-medium">
               <Flag className="w-4 h-4 mr-1.5" />
-              <span>Report Listing</span>
+              <span>{t.listing_detail.report_listing}</span>
             </button>
           </div>
         </div>

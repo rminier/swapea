@@ -9,6 +9,8 @@ import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
+import { useLanguage } from "@/components/language-provider";
+
 interface OfferModalProps {
   targetListingId: string;
   targetListingTitle: string;
@@ -25,6 +27,7 @@ export function OfferModal({ targetListingId, targetListingTitle, trigger }: Off
   const [open, setOpen] = useState(false);
   const [selectedListings, setSelectedListings] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useLanguage();
 
   // Fetch current user's listings to use in the offer
   const { data: myListings, isLoading } = useQuery<UserListing[]>({
@@ -78,10 +81,10 @@ export function OfferModal({ targetListingId, targetListingTitle, trigger }: Off
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={trigger || <Button className="w-full rounded-full bg-gradient-to-r from-blue-600 to-purple-600">Make Offer</Button>} />
+      <DialogTrigger render={trigger || <Button className="w-full rounded-full bg-gradient-to-r from-blue-600 to-purple-600">{t("listing_detail.make_offer")}</Button>} />
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Make an Offer</DialogTitle>
+          <DialogTitle>{t("listing_detail.make_offer")}</DialogTitle>
           <DialogDescription>
             Select one or more of your listings to offer for &quot;{targetListingTitle}&quot;.
           </DialogDescription>
@@ -94,7 +97,7 @@ export function OfferModal({ targetListingId, targetListingTitle, trigger }: Off
             <div className="text-center p-6 bg-muted/30 rounded-lg">
               <p className="text-muted-foreground mb-4">You don&apos;t have any items to offer.</p>
               <Button render={<Link href="/listings/new" />} variant="outline">
-                Create a Listing
+                {t("navbar.new_listing")}
               </Button>
             </div>
           ) : (
@@ -125,13 +128,13 @@ export function OfferModal({ targetListingId, targetListingTitle, trigger }: Off
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>{t("common.cancel")}</Button>
           <Button 
             onClick={handleOffer} 
             disabled={isSubmitting || selectedListings.length === 0}
             className="bg-brand-button"
           >
-            {isSubmitting ? "Sending..." : "Send Offer"}
+            {isSubmitting ? "..." : t("offers.accept")}
           </Button>
         </DialogFooter>
       </DialogContent>

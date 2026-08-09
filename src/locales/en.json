@@ -15,6 +15,7 @@
   },
   "navbar": {
     "search_placeholder": "Search listings...",
+    "home": "Home",
     "new_listing": "New Listing",
     "login": "Log in",
     "signup": "Sign up",
@@ -86,19 +87,39 @@
     }
   },
   "new_listing": {
-    "title": "Create New Listing",
-    "subtitle": "List your item to start receiving trade offers.",
+    "title": "List an Item",
+    "subtitle": "What do you have to offer? The more details, the better trade offers you'll receive.",
     "item_title": "Item Title",
-    "item_title_placeholder": "e.g. Vintage Leather Jacket, Sony PS5...",
+    "item_title_placeholder": "e.g., Vintage Polaroid Camera",
     "category": "Category",
+    "select_category": "Select a category",
     "condition": "Condition",
+    "select_condition": "Select condition",
     "description": "Description",
-    "description_placeholder": "Describe condition, specs, and what items you are willing to trade for...",
-    "location": "Location / City",
-    "images": "Photos",
+    "description_placeholder": "Describe the item, what's included, and any defects...",
+    "location": "Location",
+    "location_placeholder": "e.g., Brooklyn, NY or Local Zip Code",
+    "images": "Images",
+    "add_photo": "Add Photo",
+    "images_desc": "Upload up to 5 images. First image will be the cover.",
     "tags": "Tags (comma separated)",
     "tags_placeholder": "gaming, electronics, vintage",
-    "publish_button": "Publish Listing"
+    "publish_button": "Publish Listing",
+    "publishing": "Publishing...",
+    "conditions": {
+      "NEW": "New",
+      "LIKE_NEW": "Like New",
+      "GOOD": "Good",
+      "FAIR": "Fair",
+      "POOR": "Poor"
+    },
+    "upgrade_dialog": {
+      "title": "Upgrade to Premium",
+      "desc": "\"{category}\" is a premium category. Publishing high-value trades in categories like cars, real estate, jewelry, or electronics requires a Premium or VIP Membership.",
+      "perks": "⭐ Premium members get unlimited listings, priority offer boosting, auto-relist bumps, and full access to all trade categories!",
+      "later": "Maybe Later",
+      "upgrade": "View Membership Plans"
+    }
   },
   "listing_detail": {
     "make_offer": "Make Trade Offer",

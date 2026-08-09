@@ -15,6 +15,7 @@
   },
   "navbar": {
     "search_placeholder": "Buscar anuncios...",
+    "home": "Inicio",
     "new_listing": "Nuevo Anuncio",
     "login": "Iniciar sesión",
     "signup": "Registrarse",
@@ -86,19 +87,39 @@
     }
   },
   "new_listing": {
-    "title": "Crear Nuevo Anuncio",
-    "subtitle": "Publica tu artículo para comenzar a recibir ofertas de intercambio.",
+    "title": "Publicar un Artículo",
+    "subtitle": "¿Qué tienes para ofrecer? Cuanto más detalles des, mejores ofertas de trueque recibirás.",
     "item_title": "Título del Artículo",
-    "item_title_placeholder": "ej. Chaqueta de Cuero Vintage, Sony PS5...",
+    "item_title_placeholder": "ej. Cámara Polaroid Vintage, Sony PS5...",
     "category": "Categoría",
+    "select_category": "Selecciona una categoría",
     "condition": "Condición",
+    "select_condition": "Selecciona la condición",
     "description": "Descripción",
-    "description_placeholder": "Describe el estado, especificaciones y qué artículos estás dispuesto a aceptar...",
+    "description_placeholder": "Describe el estado del artículo, qué incluye y qué te gustaría recibir a cambio...",
     "location": "Ubicación / Ciudad",
+    "location_placeholder": "ej. Madrid, España o Código Postal",
     "images": "Fotografías",
+    "add_photo": "Agregar Foto",
+    "images_desc": "Sube hasta 5 fotografías. La primera fotografía será la imagen de portada.",
     "tags": "Etiquetas (separadas por coma)",
     "tags_placeholder": "juegos, electrónica, vintage",
-    "publish_button": "Publicar Anuncio"
+    "publish_button": "Publicar Anuncio",
+    "publishing": "Publicando...",
+    "conditions": {
+      "NEW": "Nuevo",
+      "LIKE_NEW": "Como nuevo",
+      "GOOD": "Bueno",
+      "FAIR": "Aceptable",
+      "POOR": "Deficiente"
+    },
+    "upgrade_dialog": {
+      "title": "Actualizar a Premium",
+      "desc": "\"{category}\" es una categoría premium. Publicar trueques de alto valor en categorías como vehículos, bienes raíces, joyería o electrónica requiere una membresía Premium o VIP.",
+      "perks": "⭐ ¡Los miembros Premium obtienen publicaciones ilimitadas, impulso de ofertas prioritarias y acceso a todas las categorías!",
+      "later": "Quizás más tarde",
+      "upgrade": "Ver Planes de Membresía"
+    }
   },
   "listing_detail": {
     "make_offer": "Hacer Oferta de Intercambio",

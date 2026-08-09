@@ -20,31 +20,31 @@ export function MobileBottomNav() {
 
   const navItems = [
     {
-      label: getLabel("navbar.home", "Explore"),
+      label: t("navbar.home") !== "navbar.home" ? t("navbar.home") : "Inicio",
       href: "/",
       icon: Home,
       exact: true,
     },
     {
-      label: getLabel("listings.title", "Listings"),
+      label: getLabel("listings.title", "Anuncios"),
       href: "/listings",
       icon: Package,
       exact: true,
     },
     {
-      label: getLabel("navbar.new_listing", "Post"),
+      label: getLabel("navbar.new_listing", "Publicar"),
       href: "/listings/new",
       icon: Plus,
       isAction: true,
     },
     {
-      label: getLabel("navbar.offers", "Offers"),
+      label: getLabel("navbar.offers", "Ofertas"),
       href: "/offers",
       icon: ArrowRightLeft,
       exact: false,
     },
     {
-      label: getLabel("navbar.settings", "Settings"),
+      label: getLabel("navbar.settings", "Configuración"),
       href: "/settings",
       icon: Settings,
       exact: false,
