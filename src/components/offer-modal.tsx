@@ -14,7 +14,8 @@ import { useLanguage } from "@/components/language-provider";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Package, Sparkles } from "lucide-react";
+import { ImagePlus, X, Loader2, Package, Sparkles } from "lucide-react";
+import { isNativePlatform, takeNativePhoto } from "@/lib/capacitor";
 
 interface OfferModalProps {
   targetListingId: string;
@@ -35,8 +36,47 @@ export function OfferModal({ targetListingId, targetListingTitle, trigger }: Off
   const [customTitle, setCustomTitle] = useState("");
   const [customDesc, setCustomDesc] = useState("");
   const [customImage, setCustomImage] = useState("");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { t, language } = useLanguage();
+
+  const handleCustomImageUpload = async (e?: React.ChangeEvent<HTMLInputElement>) => {
+    setIsUploadingImage(true);
+    try {
+      let imagePayload: string | undefined;
+
+      if (isNativePlatform()) {
+        imagePayload = await takeNativePhoto();
+      } else if (e?.target?.files?.[0]) {
+        const file = e.target.files[0];
+        imagePayload = await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+      }
+
+      if (!imagePayload) return;
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ image: imagePayload }),
+      });
+
+      if (!res.ok) throw new Error("Upload failed");
+      const data = await res.json();
+      if (data.url) {
+        setCustomImage(data.url);
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      toast.error(language === "es" ? "Error al subir la fotografía" : "Failed to upload photo");
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
 
   // Fetch current user's listings to use in the offer
   const { data: myListings, isLoading } = useQuery<UserListing[]>({
@@ -197,14 +237,36 @@ export function OfferModal({ targetListingId, targetListingTitle, trigger }: Off
 
             <div className="space-y-1.5">
               <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                {language === "es" ? "URL de Imagen (Opcional)" : "Image URL (Optional)"}
+                {language === "es" ? "Fotografía del Artículo (Opcional)" : "Item Photo (Optional)"}
               </label>
-              <Input
-                placeholder="https://..."
-                value={customImage}
-                onChange={(e) => setCustomImage(e.target.value)}
-                className="rounded-xl text-sm"
-              />
+              {customImage ? (
+                <div className="relative w-24 h-24 rounded-xl overflow-hidden border border-border/60 shadow-sm">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={customImage} alt="Uploaded item" className="object-cover w-full h-full" />
+                  <button
+                    type="button"
+                    onClick={() => setCustomImage("")}
+                    className="absolute top-1 right-1 bg-black/60 text-white rounded-full p-1 hover:bg-black/80 transition-colors"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              ) : (
+                <label className="flex items-center justify-center gap-2 p-3 rounded-xl border-2 border-dashed border-border/70 hover:border-purple-500 hover:bg-purple-500/5 transition-colors cursor-pointer text-xs font-semibold">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleCustomImageUpload}
+                    disabled={isUploadingImage}
+                  />
+                  {isUploadingImage ? (
+                    <><Loader2 className="h-4 w-4 animate-spin text-purple-400" /> {language === "es" ? "Subiendo fotografía..." : "Uploading photo..."}</>
+                  ) : (
+                    <><ImagePlus className="h-4 w-4 text-purple-400" /> {language === "es" ? "Subir o Tomar Fotografía" : "Upload or Take Photo"}</>
+                  )}
+                </label>
+              )}
             </div>
           </TabsContent>
         </Tabs>
