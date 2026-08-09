@@ -6,7 +6,10 @@ import { z } from "zod";
 
 const offerSchema = z.object({
   targetListingId: z.string(),
-  offeredListingIds: z.array(z.string()).min(1),
+  offeredListingIds: z.array(z.string()).optional().default([]),
+  customItemTitle: z.string().optional(),
+  customItemDescription: z.string().optional(),
+  customItemImage: z.string().optional(),
   priority: z.boolean().optional().default(false),
   protected: z.boolean().optional().default(false),
 });
@@ -30,7 +33,22 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { targetListingId, offeredListingIds, priority, protected: isProtected } = offerSchema.parse(body);
+    const {
+      targetListingId,
+      offeredListingIds,
+      customItemTitle,
+      customItemDescription,
+      customItemImage,
+      priority,
+      protected: isProtected,
+    } = offerSchema.parse(body);
+
+    if ((!offeredListingIds || offeredListingIds.length === 0) && (!customItemTitle || !customItemDescription)) {
+      return NextResponse.json(
+        { error: "Please select an item from your inventory or provide custom item details." },
+        { status: 400 }
+      );
+    }
 
     // Fetch user's subscription
     const userSub = await prisma.subscription.findUnique({
@@ -71,17 +89,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Cannot make offer on your own listing" }, { status: 400 });
     }
 
-    // Verify offered listings belong to user and are valid
-    const offeredListings = await prisma.listing.findMany({
-      where: {
-        id: { in: offeredListingIds },
-        userId: session.user.id,
-        softDeleted: false,
-      },
-    });
+    let offeredListingsConnect = {};
+    if (offeredListingIds && offeredListingIds.length > 0) {
+      // Verify offered listings belong to user and are valid
+      const offeredListings = await prisma.listing.findMany({
+        where: {
+          id: { in: offeredListingIds },
+          userId: session.user.id,
+          softDeleted: false,
+        },
+      });
 
-    if (offeredListings.length !== offeredListingIds.length) {
-      return NextResponse.json({ error: "One or more offered listings are invalid" }, { status: 400 });
+      if (offeredListings.length !== offeredListingIds.length) {
+        return NextResponse.json({ error: "One or more offered listings are invalid" }, { status: 400 });
+      }
+
+      offeredListingsConnect = {
+        connect: offeredListingIds.map(id => ({ id })),
+      };
     }
 
     // Create the offer
@@ -91,9 +116,10 @@ export async function POST(req: Request) {
         targetListingId,
         priority,
         protected: isProtected,
-        offeredListings: {
-          connect: offeredListingIds.map(id => ({ id })),
-        },
+        customItemTitle: customItemTitle || null,
+        customItemDescription: customItemDescription || null,
+        customItemImage: customItemImage || null,
+        offeredListings: offeredListingsConnect,
       },
     });
 

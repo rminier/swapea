@@ -43,6 +43,11 @@ export function UserNav({ user }: UserNavProps) {
     }
   };
 
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    window.location.href = "/";
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger render={
@@ -105,7 +110,7 @@ export function UserNav({ user }: UserNavProps) {
         <DropdownMenuSeparator />
         <DropdownMenuItem
           className="cursor-pointer text-red-500 focus:text-red-500"
-          onClick={() => signOut({ callbackUrl: "/" })}
+          onClick={handleLogout}
         >
           Log out
         </DropdownMenuItem>

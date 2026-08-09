@@ -95,27 +95,44 @@ export default async function TradePage({ params }: TradePageProps) {
               {/* Offered Listings */}
               <div className="text-center">
                 <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold mb-2">{isProposer ? "You are giving" : "You are receiving"}</p>
-                <div className="flex gap-2 justify-center">
-                  {trade.offer.offeredListings.map((listing) => (
-                    <Link key={listing.id} href={`/listings/${listing.id}`} className="flex-1">
-                      <div className="border border-border/50 rounded-xl overflow-hidden hover:border-purple-500/50 transition-colors bg-background">
-                        {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
-                        <img src={(listing.images as string[])?.[0] || ""} className="w-full aspect-square object-cover" />
-                        <div className="p-2">
-                          <p className="text-xs font-medium line-clamp-1">{listing.title}</p>
+                {trade.offer.customItemTitle ? (
+                  <div className="border border-border/50 rounded-xl overflow-hidden bg-background p-3">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={trade.offer.customItemImage || "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400"} alt={trade.offer.customItemTitle} className="w-full aspect-video object-cover rounded-lg mb-2" />
+                    <p className="font-semibold text-sm line-clamp-1">{trade.offer.customItemTitle}</p>
+                    <p className="text-xs text-muted-foreground line-clamp-2 mt-1">{trade.offer.customItemDescription}</p>
+                    <span className="text-[10px] text-purple-400 font-bold bg-purple-500/10 px-2.5 py-0.5 rounded-full mt-2 inline-block">
+                      Custom Item
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex gap-2 justify-center">
+                    {trade.offer.offeredListings.map((listing) => (
+                      <Link key={listing.id} href={`/listings/${listing.id}`} className="flex-1">
+                        <div className="border border-border/50 rounded-xl overflow-hidden hover:border-purple-500/50 transition-colors bg-background">
+                          {/* eslint-disable-next-line @next/next/no-img-element, jsx-a11y/alt-text */}
+                          <img src={(listing.images as string[])?.[0] || ""} className="w-full aspect-square object-cover" />
+                          <div className="p-2">
+                            <p className="text-xs font-medium line-clamp-1">{listing.title}</p>
+                          </div>
                         </div>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
             
             <div className="mt-8 pt-6 border-t border-border/50">
-              <p className="text-sm text-center text-muted-foreground mb-4">Trading with <span className="font-semibold text-foreground">{otherUser.name}</span></p>
+              <p className="text-sm text-center text-muted-foreground mb-4">
+                Trading with{" "}
+                <Link href={`/profile/${otherUser.username || otherUser.id}`} className="font-semibold text-purple-400 hover:underline">
+                  {otherUser.name}
+                </Link>
+              </p>
               {trade.status !== "COMPLETED" && (
-                <button className="w-full py-2.5 rounded-lg bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-medium shadow-sm transition-all text-sm">
-                  Mark as Completed
+                <button className="w-full py-3 rounded-full bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white font-bold shadow-sm transition-all text-sm">
+                  Mark Trade as Completed
                 </button>
               )}
             </div>

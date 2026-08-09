@@ -1,5 +1,6 @@
 import { ProfileHeader } from "@/components/profile/profile-header";
 import { ProfileTabs } from "@/components/profile/profile-tabs";
+import { LocationMap } from "@/components/location-map";
 import { authOptions } from "@/lib/auth";
 import { getServerSession } from "next-auth/next";
 import { notFound } from "next/navigation";
@@ -103,7 +104,13 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
   return (
     <div className="min-h-screen bg-background">
       <ProfileHeader user={normalizedUser} isOwner={isOwner} />
-      <main className="container max-w-6xl mx-auto px-4 py-12">
+      <main className="container max-w-6xl mx-auto px-4 py-12 space-y-8">
+        {user.location && (
+          <div className="bg-card/40 backdrop-blur-sm border border-border/50 rounded-3xl p-6 shadow-sm">
+            <h3 className="font-bold text-lg mb-3">Approximate Location</h3>
+            <LocationMap locationName={user.location} />
+          </div>
+        )}
         <ProfileTabs user={normalizedUser} />
       </main>
     </div>

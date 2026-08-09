@@ -11,6 +11,9 @@ import { getDictionary } from "@/lib/dictionaries";
 
 import type { Metadata } from "next";
 
+import Link from "next/link";
+import { LocationMap } from "@/components/location-map";
+
 interface ListingPageProps {
   params: Promise<{ id: string }>;
 }
@@ -123,42 +126,51 @@ export default async function ListingPage({ params }: ListingPageProps) {
         {/* Details */}
         <div className="flex flex-col space-y-6">
           <div>
-            <div className="flex items-center gap-2 mb-3">
+            <div className="flex flex-wrap gap-2 mb-3">
               <Badge variant="outline" className="text-xs bg-background/50 backdrop-blur-sm border-border/50">
                 {parsedListing.category}
               </Badge>
               <Badge variant="secondary" className={`text-xs border-0 ${conditionColors[parsedListing.condition] || ""}`}>
                 {parsedListing.condition.replace("_", " ")}
               </Badge>
+              {parsedListing.isOpenTrade ? (
+                <Badge className="text-xs bg-purple-500/10 text-purple-500 border border-purple-500/20 font-bold">
+                  ✨ {lang === "es" ? "Trueque Abierto (Acepta de Todo)" : "Open Trade (Accepting Anything)"}
+                </Badge>
+              ) : (
+                <Badge className="text-xs bg-indigo-500/10 text-indigo-500 border border-indigo-500/20 font-bold">
+                  🎯 {lang === "es" ? "Intercambio Preferido" : "Preferred Trade Categories"}
+                </Badge>
+              )}
             </div>
             <h1 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">{parsedListing.title}</h1>
             
             <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
               <div className="flex items-center">
-                <MapPin className="w-4 h-4 mr-1" />
+                <MapPin className="w-4 h-4 mr-1 text-purple-500" />
                 {parsedListing.location}
               </div>
               <div className="flex items-center">
-                <Clock className="w-4 h-4 mr-1" />
+                <Clock className="w-4 h-4 mr-1 text-purple-500" />
                 {formatDistanceToNow(new Date(parsedListing.createdAt), { addSuffix: true })}
               </div>
             </div>
           </div>
 
           <div className="p-5 bg-card/40 backdrop-blur-sm rounded-2xl border border-border/50 shadow-sm flex flex-col md:flex-row items-center gap-6 justify-between">
-            <div className="flex items-center gap-4">
-              <Avatar className="h-12 w-12 border-2 border-primary/20">
+            <Link href={`/profile/${parsedListing.user.username || parsedListing.user.id}`} className="flex items-center gap-4 group hover:opacity-80 transition-opacity">
+              <Avatar className="h-12 w-12 border-2 border-primary/20 group-hover:border-primary">
                 <AvatarImage src={parsedListing.user.image || ""} />
                 <AvatarFallback className="bg-gradient-to-br from-blue-500 to-purple-500 text-white"><UserIcon className="w-6 h-6" /></AvatarFallback>
               </Avatar>
               <div>
-                <p className="font-semibold">{parsedListing.user.name}</p>
+                <p className="font-semibold group-hover:text-purple-400 transition-colors">{parsedListing.user.name}</p>
                 <div className="flex items-center text-sm text-amber-500">
                   <span className="font-bold">{parsedListing.user.reputation.toFixed(1)}</span>
                   <span className="text-xs ml-1 text-muted-foreground">★ {t.listing_detail.reputation}</span>
                 </div>
               </div>
-            </div>
+            </Link>
             
             <div className="w-full md:w-auto">
               <OfferModal 
@@ -178,6 +190,11 @@ export default async function ListingPage({ params }: ListingPageProps) {
             <div className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground leading-relaxed whitespace-pre-wrap">
               {parsedListing.description}
             </div>
+          </div>
+
+          {/* Location Map */}
+          <div className="pt-4 border-t border-border/30">
+            <LocationMap locationName={parsedListing.location} />
           </div>
 
           <div className="pt-6 border-t border-border/30 flex justify-between items-center text-sm text-muted-foreground">

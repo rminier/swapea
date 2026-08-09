@@ -141,6 +141,8 @@ model Listing {
   location      String
   latitude      Float?
   longitude     Float?
+  isOpenTrade   Boolean          @default(true)
+  acceptCategories Json?         // Array of category strings preferred for trade
   visibility    Boolean          @default(true)
   softDeleted   Boolean          @default(false)
   autoBumpUntil DateTime?
@@ -163,14 +165,17 @@ model Listing {
 }
 
 model Offer {
-  id              String      @id @default(cuid())
-  proposingUserId String
-  targetListingId String
-  status          OfferStatus @default(PENDING)
-  priority        Boolean     @default(false)
-  protected       Boolean     @default(false)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id                    String      @id @default(cuid())
+  proposingUserId       String
+  targetListingId       String
+  status                OfferStatus @default(PENDING)
+  priority              Boolean     @default(false)
+  protected             Boolean     @default(false)
+  customItemTitle       String?
+  customItemDescription String?     @db.Text
+  customItemImage       String?
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
 
   proposingUser   User        @relation("UserOffers", fields: [proposingUserId], references: [id], onDelete: Cascade)
   targetListing   Listing     @relation("TargetListing", fields: [targetListingId], references: [id], onDelete: Cascade)

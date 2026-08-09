@@ -59,9 +59,15 @@ export default function OffersPage() {
         body: JSON.stringify({ status }),
       });
       if (!res.ok) throw new Error("Failed to update offer");
+      const data = await res.json();
       toast.success(`Offer ${status.toLowerCase()}`);
+      if (status === "ACCEPTED" && data.tradeId) {
+        toast.success(t("offers.accept") + " - Redirecting to Trade Room...");
+        window.location.href = `/trades/${data.tradeId}`;
+        return;
+      }
       refetch();
-    } catch (error) {
+    } catch {
       toast.error("Failed to update offer");
     }
   };
@@ -99,6 +105,9 @@ export default function OffersPage() {
                 proposingUserId: string;
                 proposingUser?: { name?: string | null };
                 targetListingId: string;
+                customItemTitle?: string | null;
+                customItemDescription?: string | null;
+                customItemImage?: string | null;
                 targetListing: { title: string; condition: string; images: string[] };
                 offeredListings: Array<{ id: string; title: string; condition: string; images: string[] }>;
                 trade?: { id: string } | null;
@@ -115,18 +124,32 @@ export default function OffersPage() {
                       <div className="text-sm text-muted-foreground mb-2">
                         {activeTab === "received" ? "They offered:" : "You offered:"}
                       </div>
-                      <div className="flex flex-wrap gap-4">
-                        {offer.offeredListings.map((listing) => (
-                          <div key={listing.id} className="flex items-center gap-3">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img src={listing.images[0]} alt={listing.title} className="w-16 h-16 rounded-md object-cover" />
-                            <div>
-                              <p className="font-semibold text-sm line-clamp-1">{listing.title}</p>
-                              <p className="text-xs text-muted-foreground">{listing.condition}</p>
-                            </div>
+                      {offer.customItemTitle ? (
+                        <div className="flex items-center gap-3">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={offer.customItemImage || "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=100"} alt={offer.customItemTitle} className="w-16 h-16 rounded-md object-cover border" />
+                          <div>
+                            <p className="font-semibold text-sm line-clamp-1">{offer.customItemTitle}</p>
+                            <p className="text-xs text-muted-foreground line-clamp-2">{offer.customItemDescription}</p>
+                            <span className="text-[10px] text-purple-400 font-bold bg-purple-500/10 px-2 py-0.5 rounded-full mt-1 inline-block">
+                              Custom Unlisted Item
+                            </span>
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ) : (
+                        <div className="flex flex-wrap gap-4">
+                          {offer.offeredListings.map((listing) => (
+                            <div key={listing.id} className="flex items-center gap-3">
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img src={listing.images[0]} alt={listing.title} className="w-16 h-16 rounded-md object-cover" />
+                              <div>
+                                <p className="font-semibold text-sm line-clamp-1">{listing.title}</p>
+                                <p className="text-xs text-muted-foreground">{listing.condition}</p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex-shrink-0 flex items-center justify-center bg-muted rounded-full p-3 border">

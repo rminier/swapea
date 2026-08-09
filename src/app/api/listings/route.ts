@@ -10,8 +10,10 @@ const listingSchema = z.object({
   category: z.string().min(1),
   condition: z.enum(["NEW", "LIKE_NEW", "GOOD", "FAIR", "POOR"]),
   location: z.string().min(2),
-  images: z.array(z.string().url()).min(1),
+  images: z.array(z.string()).min(1),
   tags: z.array(z.string()).default([]),
+  isOpenTrade: z.boolean().default(true),
+  acceptCategories: z.array(z.string()).optional(),
 });
 
 export async function POST(req: Request) {
@@ -72,6 +74,7 @@ export async function POST(req: Request) {
         ...validatedData,
         images: JSON.stringify(validatedData.images),
         tags: JSON.stringify(validatedData.tags),
+        acceptCategories: JSON.stringify(validatedData.acceptCategories || []),
         userId: session.user.id,
       },
     });
@@ -80,6 +83,7 @@ export async function POST(req: Request) {
       ...listing,
       images: JSON.parse(listing.images as unknown as string),
       tags: JSON.parse(listing.tags as unknown as string),
+      acceptCategories: typeof listing.acceptCategories === "string" ? JSON.parse(listing.acceptCategories) : (listing.acceptCategories || []),
     };
 
     return NextResponse.json(parsedListing, { status: 201 });

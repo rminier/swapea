@@ -31,7 +31,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { ImagePlus, X, Loader2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { ImagePlus, X, Loader2, Sparkles, Check } from "lucide-react";
 
 import { useLanguage } from "@/components/language-provider";
 
@@ -45,11 +47,32 @@ const formSchema = z.object({
 
 export function ListingForm() {
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [images, setImages] = useState<string[]>([]);
   const [isUploading, setIsUploading] = useState(false);
   const [showUpgradeDialog, setShowUpgradeDialog] = useState(false);
   const [selectedPremiumCategory, setSelectedPremiumCategory] = useState("");
+
+  const [isOpenTrade, setIsOpenTrade] = useState(true);
+  const [acceptCategories, setAcceptCategories] = useState<string[]>([]);
+
+  const availableTradeCategories = [
+    "Clothing",
+    "Electronics",
+    "Video Games",
+    "Collectibles",
+    "Toys",
+    "Books",
+    "Home",
+    "Tools",
+    "Sports",
+  ];
+
+  const toggleTradeCategory = (cat: string) => {
+    setAcceptCategories((prev) =>
+      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
+    );
+  };
 
   // Fetch subscription plan
   const { data: subData } = useQuery({
@@ -105,7 +128,13 @@ export function ListingForm() {
       const res = await fetch("/api/listings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...values, images, tags: [] }),
+        body: JSON.stringify({
+          ...values,
+          images,
+          tags: [],
+          isOpenTrade,
+          acceptCategories: isOpenTrade ? [] : acceptCategories,
+        }),
       });
 
       if (!res.ok) {
@@ -184,6 +213,16 @@ export function ListingForm() {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             
+            {/* 4-Photo Recommendation Banner */}
+            <div className="p-3.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-600 dark:text-purple-300 text-xs font-semibold flex items-center gap-2.5 shadow-sm">
+              <Sparkles className="h-4 w-4 text-purple-500 shrink-0 animate-pulse" />
+              <span>
+                {language === "es" 
+                  ? "💡 Consejo: Te recomendamos agregar al menos 4 fotografías mostrando diferentes ángulos y el estado del artículo para recibir más ofertas de trueque." 
+                  : "💡 Tip: We recommend adding at least 4 photos showing different angles and item condition to receive more trade offers!"}
+              </span>
+            </div>
+
             {/* Image Upload Section */}
             <div className="space-y-3">
               <FormLabel>{t("new_listing.images")}</FormLabel>
@@ -373,6 +412,54 @@ export function ListingForm() {
                 </FormItem>
               )}
             />
+
+            {/* Trade Preferences Section */}
+            <div className="p-5 rounded-2xl bg-card/80 border border-border/60 space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h4 className="font-bold text-sm">
+                    {language === "es" ? "Trueque Abierto (Aceptar cualquier oferta)" : "Open Trade (Accept offers from any category)"}
+                  </h4>
+                  <p className="text-xs text-muted-foreground">
+                    {language === "es" 
+                      ? "Si está activado, otros usuarios podrán ofrecerte artículos de cualquier categoría." 
+                      : "If enabled, other users can propose items from any category for trade."}
+                  </p>
+                </div>
+                <Switch
+                  checked={isOpenTrade}
+                  onCheckedChange={(checked) => setIsOpenTrade(checked)}
+                />
+              </div>
+
+              {!isOpenTrade && (
+                <div className="pt-3 border-t border-border/40 space-y-2.5">
+                  <FormLabel className="text-xs">
+                    {language === "es" ? "Categorías de trueque preferidas:" : "Preferred Trade Categories:"}
+                  </FormLabel>
+                  <div className="flex flex-wrap gap-2">
+                    {availableTradeCategories.map((cat) => {
+                      const isSelected = acceptCategories.includes(cat);
+                      return (
+                        <Badge
+                          key={cat}
+                          variant={isSelected ? "default" : "outline"}
+                          className={`cursor-pointer px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                            isSelected 
+                              ? "bg-purple-600 hover:bg-purple-700 text-white border-transparent" 
+                              : "hover:border-purple-500/50"
+                          }`}
+                          onClick={() => toggleTradeCategory(cat)}
+                        >
+                          {isSelected && <Check className="w-3.5 h-3.5 mr-1 text-white" />}
+                          {cat}
+                        </Badge>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
 
             <Button 
               type="submit" 

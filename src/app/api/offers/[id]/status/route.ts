@@ -106,14 +106,29 @@ export async function PUT(
         data: { status },
       });
 
-      // If accepted, create a Trade and update listing statuses (optional: soft delete or hide them)
+      // If accepted, create a Trade and return tradeId for immediate chat redirection
       if (status === "ACCEPTED") {
-        await prisma.trade.create({
+        const existingTrade = await prisma.trade.findUnique({
+          where: { offerId: offer.id }
+        });
+        const trade = existingTrade || await prisma.trade.create({
           data: {
             offerId: offer.id,
             status: TradeStatus.ACTIVE,
           },
         });
+
+        // Notify proposing user
+        await prisma.notification.create({
+          data: {
+            userId: offer.proposingUserId,
+            type: "OFFER_ACCEPTED",
+            content: `Your trade offer on "${offer.targetListing.title}" was accepted! Open trade room to chat.`,
+            link: `/trades/${trade.id}`,
+          }
+        });
+
+        return NextResponse.json({ ...updatedOffer, tradeId: trade.id });
       }
     }
 

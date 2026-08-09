@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -231,6 +231,40 @@ export default function SettingsPage() {
                   </SelectContent>
                 </Select>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Danger Zone: Delete Account */}
+          <Card className="border-red-500/30 bg-red-500/5 backdrop-blur-sm rounded-3xl overflow-hidden shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-xl font-bold text-red-500 font-heading">
+                {language === "es" ? "Zona de Peligro" : "Danger Zone"}
+              </CardTitle>
+              <CardDescription className="text-xs">
+                {language === "es" ? "Eliminar tu cuenta borrará permanentemente tus anuncios, ofertas e historial de trueque." : "Deleting your account will permanently remove your listings, active offers, and trade history."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button
+                variant="destructive"
+                onClick={async () => {
+                  if (confirm(language === "es" ? "¿Estás seguro de que deseas eliminar tu cuenta de Swapea? Esta acción no se puede deshacer." : "Are you sure you want to delete your Swapea account? This action cannot be undone.")) {
+                    try {
+                      const res = await fetch("/api/me", { method: "DELETE" });
+                      if (!res.ok) throw new Error("Failed to delete account");
+                      toast.success(language === "es" ? "Cuenta eliminada correctamente" : "Account deleted successfully");
+                      await signOut({ redirect: false });
+                      window.location.href = "/";
+                    } catch (err) {
+                      toast.error(language === "es" ? "Error al eliminar la cuenta" : "Failed to delete account");
+                      console.error(err);
+                    }
+                  }
+                }}
+                className="w-full rounded-xl font-bold"
+              >
+                {language === "es" ? "Eliminar Mi Cuenta" : "Delete My Account"}
+              </Button>
             </CardContent>
           </Card>
         </div>
